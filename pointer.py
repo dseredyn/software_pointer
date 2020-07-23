@@ -4,6 +4,7 @@
 # Author: Dawid Seredynski
 
 import sys
+import signal
 
 from Xlib import display
 
@@ -35,8 +36,13 @@ class PointerApp:
         self.timer = QTimer(self.app)
         self.timer.timeout.connect(self.updateFunc)
 
+        signal.signal(signal.SIGINT, self.sigint_handler)
+
+    def sigint_handler(*args):
+        QApplication.quit()
+
     def spin(self):
-        print "Hit ctrl+c in the terminal to stop the pointer app."
+        print ("Hit ctrl+c in the terminal to stop the pointer app.")
         self.window.show()
         self.timer.start(50)
         return self.app.exec_()
